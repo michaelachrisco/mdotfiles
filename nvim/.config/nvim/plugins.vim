@@ -7,19 +7,24 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'gruvbox-community/gruvbox'
+Plug '~/source/vimconflive2021-colorscheme'
+"Plug 'vim-conf-live/vimconflive2021-colorscheme'
+Plug 'ap/vim-css-color'
 
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-eunuch'
 Plug 'aymericbeaumet/vim-symlink'
   
 Plug 'pprovost/vim-ps1'
+
+Plug 'OrangeT/vim-csharp'
 
 " snippets
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-Plug 'ThePrimeagen/vim-be-good'
 
 " LSP things
 Plug 'neovim/nvim-lspconfig'
@@ -33,9 +38,14 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
+" fun
+Plug 'ThePrimeagen/vim-be-good'
+Plug 'vim-conf-live/pres.vim'
+
 call plug#end()
 
-colorscheme gruvbox
+"colorscheme gruvbox
+colorscheme vimconflive-2021
 
 " ultisnips config
 let g:UltiSnipsEditSplit="vertical"
@@ -47,9 +57,6 @@ lua << EOF
 		
 -- installed with:
 -- npm i -g pyright
-vim.lsp.set_log_level("debug")
-
-
 require('lspconfig').pyright.setup{}
 
 -- installed with:
@@ -63,8 +70,8 @@ require'lspconfig'.vimls.setup{}
 -- https://github.com/PowerShell/PowerShellEditorServices/releases
 -- attempts to use version built locally have not been fruitful
 require('lspconfig').powershell_es.setup{
-bundle_path = '~/PowerShellEditorServices',
-cmd = {'pwsh',
+bundle_path = '~/LSP/PowershellEditorServices',
+cmd = {'PowerShell.exe',
 		'-NoLogo',
 		'-NoProfile',
 		'-Command',
@@ -137,8 +144,16 @@ lua << EOF
 require('telescope').setup{
 defaults = {
 	Prompt_prefix = ">",	
-	}
-
+	},
+extensions = {
+    fzf = {
+      fuzzy = true,                    -- false will only do exact matching
+      override_generic_sorter = false, -- override the generic sorter
+      override_file_sorter = true,     -- override the file sorter
+      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                                       -- the default case_mode is "smart_case"
+    }
+  }
 }
 
 require('telescope').load_extension('fzf')
