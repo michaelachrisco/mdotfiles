@@ -1,8 +1,8 @@
 " Use alt + hjkl to resize windows
-nnoremap <M-j>    :resize -2<CR>
-nnoremap <M-k>    :resize +2<CR>
-nnoremap <M-h>    :vertical resize -2<CR>
-nnoremap <M-l>    :vertical resize +2<CR>
+nnoremap <C-A-j>    :resize -2<CR>
+nnoremap <C-A-k>    :resize +2<CR>
+nnoremap <C-A-h>    :vertical resize -2<CR>
+nnoremap <C-A-l>    :vertical resize +2<CR>
 
 " return to normal
 inoremap jk <Esc>
@@ -22,12 +22,13 @@ tnoremap <C-h> <C-w>h
 tnoremap <C-j> <C-w>j
 tnoremap <C-k> <C-w>k
 
-" Tab to swap buffers
-nnoremap <TAB> :bnext<CR>
-nnoremap <S-TAB> :bprevious<CR>
-
-" save and run python code
-nnoremap <C-p> :w <bar> :! python3 % <cr>
+" move text
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
 
 " append yank
 nnoremap <leader>y "Ay
@@ -43,11 +44,16 @@ nnoremap <leader>} :clast <cr>
 nnoremap <leader><leader>[ :copen <cr>
 nnoremap <leader><leader>] :cclose <cr>
 
+" diffthis
+nnoremap <leader>dt :windo diffthis <cr>
 
 " fugitve mappings
 nnoremap <leader>gg :G <cr>
 nnoremap <leader>gd :Gdiff <cr>
-nnoremap <leader>gl :Glog <cr>
+nnoremap <leader>gl :Gclog <cr>
+nnoremap <leader>gb :G blame <cr>
+nnoremap <leader>gmh :diffget //2 \| diffupdate <cr>
+nnoremap <leader>gml :diffget //3 \| diffupdate <cr>
 
 " telescope mappings
 nnoremap <leader>ff :Telescope find_files <cr> 
@@ -58,6 +64,17 @@ nnoremap <leader>fd :Telescope git_files cwd=~/dotfiles <cr>
 nnoremap <leader>fb :Telescope buffers <cr> 
 nnoremap <leader>f; :Telescope commands <cr>
 nnoremap <leader>ft :Telescope live_grep <cr>
+
+" Harpoon mappings
+nnoremap <leader>ha :lua require("harpoon.mark").add_file() <cr>
+nnoremap <leader><leader>h :lua require("harpoon.ui").toggle_quick_menu() <CR>
+nnoremap <C-A-j> :lua require("harpoon.ui").toggle_quick_menu() <CR>
+
+nnoremap <leader>hh :lua require("harpoon.ui").nav_file(1) <cr>
+nnoremap <leader>hj :lua require("harpoon.ui").nav_file(2) <cr>
+nnoremap <leader>hk :lua require("harpoon.ui").nav_file(3) <cr>
+nnoremap <leader>hl :lua require("harpoon.ui").nav_file(4) <cr>
+
 
 " lsp mappings
 nnoremap gd <cmd>lua vim.lsp.buf.definition()<cr>

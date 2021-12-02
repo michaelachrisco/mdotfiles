@@ -6,20 +6,25 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
+" colors
 Plug 'gruvbox-community/gruvbox'
-Plug '~/source/vimconflive2021-colorscheme'
-"Plug 'vim-conf-live/vimconflive2021-colorscheme'
+Plug 'vim-conf-live/vimconflive2021-colorscheme'
 Plug 'ap/vim-css-color'
 
+" syntax-highlighing extention
+"Plug 'pprovost/vim-ps1'
+"Plug 'OrangeT/vim-csharp'
+"Plug 'neovimhaskell/haskell-vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+" tpope
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'aymericbeaumet/vim-symlink'
   
-Plug 'pprovost/vim-ps1'
-
-Plug 'OrangeT/vim-csharp'
 
 " snippets
 Plug 'SirVer/ultisnips'
@@ -32,11 +37,12 @@ Plug 'hrsh7th/nvim-compe'
 Plug 'windwp/nvim-autopairs'
 Plug 'PowerShell/PowerShellEditorServices'
 
-" Telescope and friends
+" project navigation
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'ThePrimeagen/harpoon'
 
 " fun
 Plug 'ThePrimeagen/vim-be-good'
@@ -44,8 +50,8 @@ Plug 'vim-conf-live/pres.vim'
 
 call plug#end()
 
-"colorscheme gruvbox
-colorscheme vimconflive-2021
+colorscheme gruvbox
+"colorscheme vimconflive-2021
 
 " ultisnips config
 let g:UltiSnipsEditSplit="vertical"
@@ -86,9 +92,13 @@ cmd = {'PowerShell.exe',
 -- Omnisharp
 -- C# LSP
 local pid = vim.fn.getpid()
-local omnisharp_bin = "/home/mark/LSP/Omnisharp/run"
+local omnisharp_bin = "omnisharp"
 require'lspconfig'.omnisharp.setup{
     cmd = { omnisharp_bin, "--languageserver" , "--hostPID", tostring(pid) };
+}
+
+--require'lspconfig'.csharp_ls.setup{}
+require'lspconfig'.hls.setup{
 }
 
 EOF
@@ -159,5 +169,53 @@ extensions = {
 require('telescope').load_extension('fzf')
 EOF
 
+" Harpoon config
+lua << EOF
+require("harpoon").setup({
+    global_settings = {
+        save_on_toggle = false,
+        save_on_change = true,
+        enter_on_sendcmd = false,
+    }
+})
 
-" Soli Deo GLoria
+EOF
+
+" Treesitter config
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ignore_install = {}, -- List of parsers to ignore installing
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = {},  -- list of language that will be disabled
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = true,
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+  indent = {
+    enable = true
+  },
+}
+
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+parser_config.haskell = {
+  install_info = {
+    url = "~/source/tree-sitter-haskell",
+    files = {"src/parser.c", "src/scanner.cc"}
+  }
+}
+
+EOF
+" Soli Deo Gloria
